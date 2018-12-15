@@ -38,13 +38,19 @@ Page({
         if (!isString(result)) {
           return;
         }
-        if (validUrl.isWebUri(result)) {
-          this.setData({
-            newUrl: result,
-          });
-        } else {
+        if (!validUrl.isWebUri(result)) {
           console.log('Not a url');
+          return;
         }
+
+        if (this.data.list.find(item => item.url === result)) {
+          console.log('Url exists.');
+          return;
+        }
+
+        this.setData({
+          newUrl: result,
+        });
       })
       .catch(console.error);
   },
@@ -78,6 +84,11 @@ Page({
       isSaving: true,
     });
     const link = new Link(this.data.newUrl);
+    const acl = new AV.ACL();
+    acl.setPublicReadAccess(false);
+    acl.setPublicWriteAccess(false);
+    acl.setReadAccess(app.globalData.user, true);
+    link.setACL(acl);
     link.save()
       .then(saved => {
         const {list} = this.data;

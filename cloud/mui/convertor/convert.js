@@ -1,6 +1,6 @@
 const tencentcloud = require("tencentcloud-sdk-nodejs");
-const {uniqueId} = require('lodash');
-const {APP_ID, APP_SECRET} = require('./config');
+
+/* global TENCENT_CLOUD_API_ID, TENCENT_CLOUD_API_SECRET */
 
 const AaiClient = tencentcloud.aai.v20180522.Client;
 const models = tencentcloud.aai.v20180522.Models;
@@ -9,16 +9,16 @@ const Credential = tencentcloud.common.Credential;
 const ClientProfile = tencentcloud.common.ClientProfile;
 const HttpProfile = tencentcloud.common.HttpProfile;
 
-let cred = new Credential(APP_ID, APP_SECRET);
+console.log(process.env.TENCENT_CLOUD_API_ID, process.env.TENCENT_CLOUD_API_SECRET);
+let cred = new Credential(process.env.TENCENT_CLOUD_API_ID, process.env.TENCENT_CLOUD_API_SECRET);
 let httpProfile = new HttpProfile();
 httpProfile.endpoint = "aai.tencentcloudapi.com";
 let clientProfile = new ClientProfile();
 clientProfile.httpProfile = httpProfile;
 let client = new AaiClient(cred, "ap-beijing", clientProfile);
 
-module.exports = (text) => {
+module.exports = (sessionId, text) => {
   console.log('start TTS: ', text);
-  const sessionId = uniqueId('mui-');
   const req = new models.TextToVoiceRequest();
   text = decodeURIComponent(text);
   const params = `{"Text":"${text}","SessionId":"${sessionId}","ModelType":1}`;

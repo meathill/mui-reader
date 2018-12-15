@@ -71,7 +71,7 @@
   width 670rpx
   padding 20rpx
   margin 40rpx
-  border 1rpx solid #BFC9FF
+  border 2rpx solid #BFC9FF
 
   &.fixed
     position fixed
@@ -122,3 +122,53 @@
 
     &::after
       border none
+
+.listen-list
+  padding 40rpx 40rpx 0
+
+.listen-item
+  background-color white
+  border 1rpx solid #E2E2E2
+  border-radius 8rpx
+  box-shadow 0 4rpx 16rpx rgba(#000, .1)
+  padding 20rpx
+
+  &.active
+    border 4rpx #7599FF solid
+
+  + .listen-item
+    margin-top 40rpx
+
+  .header
+    display flex
+
+  .h1
+    font-size 36rpx
+    line-height 48rpx
+    flex 1
+    white-space nowrap
+    overflow hidden
+    text-overflow ellipsis
+
+  .badge
+    background-color #7599FF
+    color white
+    font-size 24rpx
+    width 90rpx
+    height 46rpx
+    line-height 46rpx
+    border-radius 4rpx
+    text-align center
+    margin-right 10rpx
+
+  .from
+    color #AAA
+    font-size 24rpx
+    line-height 44rpx
+    margin-bottom 10rpx
+    text-indent 4rpx
+
+  .excerpt
+    color #666
+    font-size 28rpx
+    line-height 40rpx
