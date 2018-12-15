@@ -17,6 +17,7 @@ clientProfile.httpProfile = httpProfile;
 let client = new AaiClient(cred, "ap-beijing", clientProfile);
 
 module.exports = (text) => {
+  console.log('start TTS: ', text);
   const sessionId = uniqueId('mui-');
   const req = new models.TextToVoiceRequest();
   text = decodeURIComponent(text);
@@ -32,6 +33,7 @@ module.exports = (text) => {
 
       const {Audio} = response;
       resolve(Audio);
+      console.log('TTS ok');
     });
   });
 };

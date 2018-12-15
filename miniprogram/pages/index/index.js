@@ -1,120 +1,83 @@
-//index.js
-const app = getApp()
+import AV from '../../libs/av-weapp-min';
+import {alert} from '../../libs/Weixin';
+
+/* global Page, getApp, wx */
+
+const app = getApp();
 
 Page({
   data: {
-    avatarUrl: './user-unlogin.png',
-    userInfo: {},
     logged: false,
-    takeSession: false,
-    requestResult: ''
+    list: null,
   },
 
-  onLoad: function() {
-    if (!wx.cloud) {
-      wx.redirectTo({
-        url: '../chooseLib/chooseLib',
-      })
-      return
-    }
-
-    // 获取用户信息
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              this.setData({
-                avatarUrl: res.userInfo.avatarUrl,
-                userInfo: res.userInfo
-              })
-            }
-          })
-        }
-      }
-    })
-  },
-
-  onGetUserInfo: function(e) {
-    if (!this.logged && e.detail.userInfo) {
+  getReady() {
+    if (app.globalData.user) {
       this.setData({
         logged: true,
-        avatarUrl: e.detail.userInfo.avatarUrl,
-        userInfo: e.detail.userInfo
+      });
+      this.refresh();
+    }
+    wx.hideLoading();
+  },
+
+  refresh(createdAt, greater = true) {
+    const query = new AV.Query('link')
+      .descending('status')
+      .descending('createdAt');
+    if (createdAt) {
+      if (greater) {
+        query.greaterThan('createdAt', createdAt);
+      } else {
+        query.lessThan('createdAt', createdAt);
+      }
+    }
+    query.limit(1);
+    return query.find()
+      .then(links => {
+        return links.map(link => link.toJSON());
       })
+      .catch(error => {
+        console.error(error.message);
+        alert(error.message);
+      });
+  },
+
+  onLoad() {
+    wx.showLoading({
+      title: '加载中',
+      mask: true,
+    });
+
+    if (app.userInfoReadyCallback) {
+      this.getReady();
+    } else {
+      app.userInfoReadyCallback = () => {
+        this.getReady();
+      };
     }
   },
 
-  onGetOpenid: function() {
-    // 调用云函数
-    wx.cloud.callFunction({
-      name: 'login',
-      data: {},
-      success: res => {
-        console.log('[云函数] [login] user openid: ', res.result.openid)
-        app.globalData.openid = res.result.openid
-        wx.navigateTo({
-          url: '../userConsole/userConsole',
-        })
-      },
-      fail: err => {
-        console.error('[云函数] [login] 调用失败', err)
-        wx.navigateTo({
-          url: '../deployFunctions/deployFunctions',
-        })
-      }
-    })
-  },
+  onGotUserInfo(event) {
+    const {userInfo} = event.detail;
+    this.setData({
+      logged: true,
+    });
 
-  // 上传图片
-  doUpload: function () {
-    // 选择图片
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      sourceType: ['album', 'camera'],
-      success: function (res) {
+    app.globalData.userInfo = userInfo;
+    AV.User.loginWithWeapp()
+      .then(me => {
+        app.globalData.user = me;
+        if (!me.get('nickName')) {
+          me.set(userInfo);
+          return me.save();
+        }
+        return me;
+      })
+      .catch(error => {
+        console.error(error);
+        alert(error.message || '登录失败');
+      });
+  }
 
-        wx.showLoading({
-          title: '上传中',
-        })
-
-        const filePath = res.tempFilePaths[0]
-        
-        // 上传图片
-        const cloudPath = 'my-image' + filePath.match(/\.[^.]+?$/)[0]
-        wx.cloud.uploadFile({
-          cloudPath,
-          filePath,
-          success: res => {
-            console.log('[上传文件] 成功：', res)
-
-            app.globalData.fileID = res.fileID
-            app.globalData.cloudPath = cloudPath
-            app.globalData.imagePath = filePath
-            
-            wx.navigateTo({
-              url: '../storageConsole/storageConsole'
-            })
-          },
-          fail: e => {
-            console.error('[上传文件] 失败：', e)
-            wx.showToast({
-              icon: 'none',
-              title: '上传失败',
-            })
-          },
-          complete: () => {
-            wx.hideLoading()
-          }
-        })
-
-      },
-      fail: e => {
-        console.error(e)
-      }
-    })
-  },
-
-})
+});

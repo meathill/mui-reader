@@ -9,3 +9,4 @@ cloudfunctions/convertor/config.js
 
 # build
 *.mp3
+*.wav

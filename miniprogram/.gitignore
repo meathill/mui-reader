@@ -5,6 +5,7 @@
 node_modules
 
 # DEV
+config/av.js
 
 # build
 *.wxss

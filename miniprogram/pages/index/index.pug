@@ -1,0 +1,11 @@
+view.welcome(
+  wx:if="{{!logged}}",
+)
+  image(src="../../images/mic.png")
+  text.h1 换听
+  text.lead 帮你阅读文章的好帮手
+
+  button.login-button(
+    open-type="getUserInfo",
+    bindgetuserinfo="onGotUserInfo",
+  )
