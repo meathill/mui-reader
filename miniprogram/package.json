@@ -1,0 +1,30 @@
+{
+  "name": "mui-reader",
+  "version": "0.1.0",
+  "description": "A tts wxapp mainly for 微信公众号.",
+  "scripts": {
+    "dev": "gulp watch",
+    "build": "gulp",
+    "eslint": "eslint ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [],
+  "author": "Meathill <meathill@gmail.com> (http://meathill.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/register": "^7.0.0",
+    "gulp": "^4.0.0",
+    "gulp-pug": "^4.0.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-stylus": "^2.7.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "lodash-es": "^4.17.11"
+  }
+}
