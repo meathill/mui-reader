@@ -3,8 +3,12 @@ npm-debug.log
 start.sh
 .avoscloud
 .leancloud
-convertor/config.js
 
 # VIM
 *~
 *.swp
+
+# DEV
+*.mp3
+*.wav
+file.txt

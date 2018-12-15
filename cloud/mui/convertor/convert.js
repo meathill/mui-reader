@@ -9,7 +9,6 @@ const Credential = tencentcloud.common.Credential;
 const ClientProfile = tencentcloud.common.ClientProfile;
 const HttpProfile = tencentcloud.common.HttpProfile;
 
-console.log(process.env.TENCENT_CLOUD_API_ID, process.env.TENCENT_CLOUD_API_SECRET);
 let cred = new Credential(process.env.TENCENT_CLOUD_API_ID, process.env.TENCENT_CLOUD_API_SECRET);
 let httpProfile = new HttpProfile();
 httpProfile.endpoint = "aai.tencentcloudapi.com";
@@ -33,7 +32,6 @@ module.exports = (sessionId, text) => {
 
       const {Audio} = response;
       resolve(Audio);
-      console.log('TTS ok');
     });
   });
 };
