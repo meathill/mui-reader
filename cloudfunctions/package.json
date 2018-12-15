@@ -6,6 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": {
+    "name": "Meathill",
+    "email": "meathill@gmail.com",
+    "url": "https://blog.meathill.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "install": "^0.12.2",
+    "npm": "^6.5.0",
+    "tencentcloud-sdk-nodejs": "^3.0.38"
+  }
 }

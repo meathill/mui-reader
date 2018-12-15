@@ -4,6 +4,8 @@
 # repo
 node_modules
 
+# DEV
+
 # build
 *.wxss
 *.wxml

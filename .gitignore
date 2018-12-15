@@ -3,3 +3,9 @@
 
 # repo
 node_modules
+
+# DEV
+cloudfunctions/convertor/config.js
+
+# build
+*.mp3
