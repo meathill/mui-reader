@@ -1,9 +1,11 @@
-import {confirm, getAuthSetting, getUserInfo, setApp} from "./libs/Weixin";
+import {confirm, getAuthSetting, getUserInfo, setApp} from './libs/Weixin';
 import {LEAN_APP_ID, LEAN_APP_SECRET} from './config/av';
 import AV from './libs/av-weapp-min';
 
+/* global App, wx */
+
 App({
-  onLaunch: function (options) {
+  onLaunch: function(options) {
     const {scene = ''} = options;
     setApp(this);
 

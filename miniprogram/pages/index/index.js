@@ -1,4 +1,4 @@
-import AV from '../../libs/av-weapp-min';
+import AV, {Cloud} from '../../libs/av-weapp-min';
 import {alert, getClipboardData} from '../../libs/Weixin';
 import isString from '../../libs/isString';
 import {merge} from "../../helper/util";
@@ -22,8 +22,10 @@ Page({
 
   getReady() {
     if (app.globalData.user) {
-      this.refresh();
-      this.searchClipboard();
+      this.refresh()
+        .then(() => {
+          this.searchClipboard();
+        });
     } else {
       this.setData({
         logged: true,
@@ -50,6 +52,17 @@ Page({
 
         this.setData({
           newUrl: result,
+        });
+        return result;
+      })
+      .then(url => {
+        return Cloud.run('fetch', {
+          url,
+        })
+      })
+      .then(article => {
+        this.setData({
+          newArticle: article,
         });
       })
       .catch(console.error);

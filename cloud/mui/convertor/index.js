@@ -4,6 +4,7 @@ const {promisify} = require('util');
 const AV = require('leanengine');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const del = require('del');
 const {flatten} = require('lodash');
 const convert = require('./convert');
 const {generateRandomString} = require("../helper/util");
@@ -11,7 +12,6 @@ const spawn = require('../helper/spawn');
 
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
-const unlink = promisify(fs.unlink);
 
 module.exports = function (url) {
   const startTime = Date.now();
@@ -106,14 +106,6 @@ module.exports = function (url) {
       ];
       return spawn(cmd, args);
     })
-    // 删掉所有 .wav 文件
-    .then(() => {
-      const promises = [];
-      for (let i = 0; i < length; i++) {
-        promises.push(unlink(`${sessionId}-${i}.wav`));
-      }
-      return Promise.all(promises);
-    })
     // 上传 mp3 到存储
     .then(() => {
       return readFile('out.mp3', {
@@ -126,8 +118,16 @@ module.exports = function (url) {
       });
       return file.save();
     })
+    // 删掉中间文件
     .then(file => {
+      return Promise.all([
+        file,
+        del(['*.mp3', '*.wav', 'file.txt']),
+      ]);
+    })
+    .then(([file]) => {
       console.log(`转换成功。共：${total} 字，耗时：${Math.round((Date.now() - startTime) / 1000)}s`);
       return file;
-    });
+    })
+    .catch(console.error);
 };
