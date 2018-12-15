@@ -1,0 +1,124 @@
+@import "../../styl/button.styl"
+@import "../../node_modules/spinkit/css/spinners/2-double-bounce.css"
+@import "../../node_modules/animate.css/source/_base.css"
+@import "../../node_modules/animate.css/source/sliding_entrances/slideInDown.css"
+@import "../../node_modules/animate.css/source/sliding_exits/slideOutUp.css"
+
+.welcome
+  display flex
+  flex-direction column
+  align-items center
+  padding-top 140rpx
+
+  image
+    display block
+    width 204rpx
+    height 263rpx
+
+  .h1
+    font-size 60rpx
+    line-height 80rpx
+    font-weight bold
+    margin-top 33rpx
+    counter-reset wizard
+
+  .lead,
+  .hint
+    line-height 48rpx
+
+  .login-button
+    primary-button()
+
+  .hint
+    margin 24rpx
+
+  .wizard-item
+    background-color #EDEFF4
+    border-radius 40rpx
+    width 490rpx
+    height 80rpx
+    line-height 80rpx
+    position relative
+    padding-left 80rpx
+    display flex
+    justify-content flex-start
+
+    &:first-of-type
+      margin-top 48rpx
+
+    &::before
+      background-color #7599FF
+      border-radius 32rpx
+      content counter(wizard)
+      color white
+      display block
+      width 64rpx
+      height 64rpx
+      line-height 64rpx
+      text-align center
+      counter-increment wizard
+      position absolute
+      top 8rpx
+      left 8rpx
+
+    + .wizard-item
+      margin-top 30rpx
+
+.new-url
+  background-color white
+  border-radius 8rpx
+  box-shadow 0 4rpx 16rpx rgba(#7196F1, .3)
+  width 670rpx
+  padding 20rpx
+  margin 40rpx
+  border 1rpx solid #BFC9FF
+
+  &.fixed
+    position fixed
+    top 40rpx
+    left 40rpx
+    margin 0
+
+  .h2
+    display block
+    font-size 36rpx
+    line-height 48rpx
+    margin-bottom 14rpx
+
+  .summary
+    background-color #F3F6FF
+    border-radius 8rpx
+    padding 14rpx
+
+  .loading
+    margin 10rpx 0 0
+    width 30rpx
+    height 30rpx
+
+  .url
+    white-space nowrap
+    overflow hidden
+    text-overflow ellipsis
+    font-size 24rpx
+
+  .actions
+    display flex
+    justify-content space-between
+    margin-top 24rpx
+
+    button
+      margin 0
+
+  .add-button
+    primary-button(300rpx, 80rpx, 32rpx)
+
+  .cancel-button
+    background-color transparent
+    border none
+    width 120rpx
+    height 80rpx
+    font-size 28rpx
+    line-height 80rpx
+
+    &::after
+      border none

@@ -271,3 +271,16 @@ export function openSetting() {
     });
   });
 }
+
+export function getClipboardData() {
+  return new Promise((resolve, reject) => {
+    wx.getClipboardData({
+      success({data}) {
+        resolve(data);
+      },
+      fail(res) {
+        reject(res);
+      },
+    });
+  });
+}

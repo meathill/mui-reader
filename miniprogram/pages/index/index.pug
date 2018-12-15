@@ -1,11 +1,45 @@
-view.welcome(
-  wx:if="{{!logged}}",
+view.new-url.animated.fast(
+  wx:if="{{newUrl}}",
+  class="{{!list || list.length === 0 ? 'fixed' : ''}} {{newUrlOut ? 'slideOutUp' : 'slideInDown'}}",
 )
+  text.h2 发现新连接
+  view.summary
+    view.url {{newUrl}}
+    view.title(wx:if="{{newArticle}}") {{newArticle.title}}
+    view.excerpt(wx:if="{{newArticle}}") {{newArticle.excerpt}}
+    view.loading.sk-double-bounce(wx:else)
+      view.sk-child.sk-double-bounce1
+      view.sk-child.sk-double-bounce2
+
+  view.actions
+    button.add-button(
+      disabled="{{isSaving}}",
+      loading="{{isSaving}}",
+      bindtap="doAdd",
+    ) 转换语音
+    button.cancel-button(
+      bindtap="doCancel",
+    ) 放弃
+
+view.welcome(wx:if="{{!list || list.length === 0}}")
   image(src="../../images/mic.png")
   text.h1 换听
   text.lead 帮你阅读文章的好帮手
 
-  button.login-button(
-    open-type="getUserInfo",
-    bindgetuserinfo="onGotUserInfo",
+  block(
+    wx:if="{{!logged}}",
   )
+    button.login-button(
+      open-type="getUserInfo",
+      bindgetuserinfo="onGotUserInfo",
+      disabled="{{isLogin}}",
+      loading="{{isLogin}}",
+    ) 登录
+    text.hint 需要先授权登录才可以顺利使用哦~
+
+  block(wx:else)
+    view.wizard-item.wizard-1 打开任意文章点击右上“…”
+    view.wizard-item.wizard-2 点击“复制连接”
+    view.wizard-item.wizard-3 进入“换听”小程序
+    view.wizard-item.wizard-4 换听会自动帮您发现文章
+

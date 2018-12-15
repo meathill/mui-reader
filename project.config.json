@@ -2,15 +2,17 @@
 	"miniprogramRoot": "miniprogram/",
 	"cloudfunctionRoot": "cloudfunctions/",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": true,
 		"postcss": true,
 		"minified": true,
-		"newFeature": true
+		"newFeature": true,
+		"autoAudits": false
 	},
 	"appid": "wx1814b3757edec6ad",
 	"projectname": "mui-reader-wxapp",
 	"libVersion": "2.2.5",
+	"debug": true,
 	"condition": {
 		"search": {
 			"current": -1,
