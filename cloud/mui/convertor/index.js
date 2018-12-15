@@ -16,7 +16,7 @@ const unlink = promisify(fs.unlink);
 module.exports = function (url) {
   const startTime = Date.now();
   let length;
-  let total;
+  let total = 0;
   let sessionId = generateRandomString(12);
   return axios.get(url)
     .then(content => {
@@ -126,7 +126,8 @@ module.exports = function (url) {
       });
       return file.save();
     })
-    .then(() => {
+    .then(file => {
       console.log(`转换成功。共：${total} 字，耗时：${Math.round((Date.now() - startTime) / 1000)}s`);
+      return file;
     });
 };

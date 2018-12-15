@@ -1,6 +1,6 @@
-import AV from '../libs/av-weapp-min';
+const AV = require('leanengine');
 
-export const LINK = 'Link';
+const LINK = 'Link';
 
 class Link extends AV.Object {
   constructor(url) {
@@ -26,4 +26,4 @@ class Link extends AV.Object {
 
 AV.Object.register(Link, LINK);
 
-export default Link;
+module.exports = Link;

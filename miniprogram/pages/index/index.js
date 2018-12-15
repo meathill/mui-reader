@@ -1,8 +1,8 @@
 import AV from '../../libs/av-weapp-min';
 import {alert, getClipboardData} from '../../libs/Weixin';
 import isString from '../../libs/isString';
-import Link, {LINK} from "../../model/Link";
 import {merge} from "../../helper/util";
+import Bookmark, {BOOKMARK} from "../../model/Bookmark";
 const validUrl = require('../../libs/valid-url');
 
 /* global Page, getApp, wx */
@@ -55,7 +55,7 @@ Page({
       .catch(console.error);
   },
   refresh(createdAt, greater = true) {
-    const query = new AV.Query(LINK)
+    const query = new AV.Query(BOOKMARK)
       .descending('status')
       .descending('createdAt');
     if (createdAt) {
@@ -67,9 +67,9 @@ Page({
     }
     query.limit(1);
     return query.find()
-      .then(links => {
-        links = links.map(link => ({id: link.id, ...link.toJSON()}));
-        const list = merge(this.data.list, links);
+      .then(bookmarks => {
+        bookmarks = bookmarks.map(bookmark => ({id: bookmark.id, ...bookmark.toJSON()}));
+        const list = merge(this.data.list, bookmarks);
         this.setData({
           list,
         });
@@ -83,13 +83,9 @@ Page({
     this.setData({
       isSaving: true,
     });
-    const link = new Link(this.data.newUrl);
-    const acl = new AV.ACL();
-    acl.setPublicReadAccess(false);
-    acl.setPublicWriteAccess(false);
-    acl.setReadAccess(app.globalData.user, true);
-    link.setACL(acl);
-    link.save()
+    const bookmark = new Bookmark(this.data.newUrl);
+    bookmark.from = app.globalData.user;
+    bookmark.save()
       .then(saved => {
         const {list} = this.data;
         list.unshift({
