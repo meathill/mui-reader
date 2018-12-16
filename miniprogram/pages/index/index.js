@@ -4,6 +4,7 @@ import isString from '../../libs/isString';
 import {merge, toMinute} from "../../helper/util";
 import Bookmark, {BOOKMARK, STATUS_PENDING} from "../../model/Bookmark";
 import {STATUS_NORMAL} from "../../model/Link";
+import getSource from "../../filter/source";
 
 const validUrl = require('../../libs/valid-url');
 
@@ -92,6 +93,7 @@ Page({
             audioCurrent: '00:00',
             audioDurationText: '00:00',
             isPlayed: false,
+            source: getSource(bookmark.get('url')),
           };
         });
         const list = merge(this.data.list, bookmarks);
@@ -177,6 +179,13 @@ Page({
       });
   },
   onLoad() {
+    this.audioContext = wx.getBackgroundAudioManager();
+    this.audioContext.onPlay(this.onPlay.bind(this));
+    this.audioContext.onPause(this.onPause.bind(this));
+    this.audioContext.onTimeUpdate(this.onTimeUpdate.bind(this));
+    this.audioContext.onEnded(this.onEnded.bind(this));
+  },
+  onShow() {
     wx.showLoading({
       title: '加载中',
       mask: true,
@@ -189,12 +198,6 @@ Page({
         this.getReady();
       };
     }
-
-    this.audioContext = wx.getBackgroundAudioManager();
-    this.audioContext.onPlay(this.onPlay.bind(this));
-    this.audioContext.onPause(this.onPause.bind(this));
-    this.audioContext.onTimeUpdate(this.onTimeUpdate.bind(this));
-    this.audioContext.onEnded(this.onEnded.bind(this));
   },
   onPullDownRefresh() {
     this.refresh();

@@ -54,7 +54,7 @@ view.listen-list(wx:else)
     view.header
       view.badge(wx:if="{{item.link.status === 0}}") 转换中
       view.h1 {{item.link && item.link.title || item.url}}
-    view.from 来源：{{item.origin || '微信公众号'}}
+    view.from 来源：{{item.source}}
     view.excerpt {{item.link && item.link.excerpt || ''}}
     view.player(wx:if="{{item.isActive}}")
       button.pause-button(
