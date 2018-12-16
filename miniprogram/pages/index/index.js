@@ -98,6 +98,7 @@ Page({
         this.setData({
           list,
         });
+        wx.stopPullDownRefresh();
       })
       .catch(error => {
         console.error(error.message);

@@ -10,5 +10,5 @@
     "navigationBarTitleText": "换听",
     "navigationBarTextStyle": "black"
   },
-  "requiredBackgroundModes": true
+  "requiredBackgroundModes": ["audio"]
 }
