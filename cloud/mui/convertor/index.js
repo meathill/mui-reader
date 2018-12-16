@@ -94,7 +94,7 @@ module.exports = function (url) {
         fileList.push(`file ${file}`);
       }
       console.log('Output file list.');
-      return writeFile('file.txt', fileList.join('\n'), 'utf8');
+      return writeFile(`${sessionId}.txt`, fileList.join('\n'), 'utf8');
     })
     // 把所有 wav 合并成一个
     .then(() => {
@@ -102,9 +102,9 @@ module.exports = function (url) {
       const args = [
         '-f', 'concat',
         '-safe', '0',
-        '-i', 'file.txt',
+        '-i', `${sessionId}.txt`,
         '-c', 'copy',
-        'out.wav',
+        `${sessionId}.wav`,
       ];
       return spawn(cmd, args);
     })
@@ -112,14 +112,14 @@ module.exports = function (url) {
     .then(() => {
       const cmd = 'ffmpeg';
       const args = [
-        '-i', 'out.wav',
-        'out.mp3',
+        '-i', `${sessionId}.wav`,
+        `${sessionId}.mp3`,
       ];
       return spawn(cmd, args);
     })
     // 上传 mp3 到存储
     .then(() => {
-      return readFile('out.mp3', {
+      return readFile(`${sessionId}.mp3`, {
         encoding: 'base64',
       });
     })
@@ -133,7 +133,7 @@ module.exports = function (url) {
     .then(file => {
       return Promise.all([
         file,
-        del(['*.mp3', '*.wav', 'file.txt']),
+        del([`${sessionId}.mp3`, `${sessionId}*.wav`, `${sessionId}.txt`]),
       ]);
     })
     .then(([file]) => {
