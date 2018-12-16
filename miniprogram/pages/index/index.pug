@@ -49,6 +49,7 @@ view.listen-list(wx:else)
     wx:key="{{item.id}}",
     bindtap="doActive",
     data-index="{{index}}",
+    class="{{item.isActive ? 'active' : ''}}",
   )
     view.header
       view.badge(wx:if="{{item.link.status === 0}}") 转换中

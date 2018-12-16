@@ -213,6 +213,10 @@ Page({
     if (!list[index].link || !list[index].link.file) {
       return;
     }
+    const current = this.data.list.find(item => item.isActive);
+    if (current) {
+      current.isActive = false;
+    }
     list[index].isActive = true;
     this.setData({
       list,
