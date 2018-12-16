@@ -19,7 +19,6 @@ let client = new AaiClient(cred, "ap-beijing", clientProfile);
 module.exports = (sessionId, text) => {
   console.log('start TTS: ', text);
   const req = new models.TextToVoiceRequest();
-  text = decodeURIComponent(text);
   const params = `{"Text":"${text}","SessionId":"${sessionId}","ModelType":1}`;
   req.from_json_string(params);
 
