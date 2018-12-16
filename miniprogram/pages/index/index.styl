@@ -138,7 +138,6 @@
   border 1rpx solid #E2E2E2
   border-radius 8rpx
   box-shadow 0 4rpx 16rpx rgba(#000, .1)
-  padding 20rpx
 
   &.active
     border 4rpx #7599FF solid
@@ -148,6 +147,7 @@
 
   .header
     display flex
+    padding 20rpx 20rpx 0
 
   .h1
     font-size 36rpx
@@ -173,9 +173,74 @@
     font-size 24rpx
     line-height 44rpx
     margin-bottom 10rpx
-    text-indent 4rpx
+    text-indent 24rpx
 
   .excerpt
     color #666
     font-size 28rpx
     line-height 40rpx
+    padding 0 20rpx 20rpx
+
+.player
+  background-color #EDEFF4
+  display flex
+  padding 20rpx
+
+.play-button,
+.pause-button
+  background-color white
+  border 2rpx solid #C8D6FF
+  border-radius 46rpx
+  filter drop-shadow(0 6rpx 14rpx rgba(#7599FF, .2))
+  width 92rpx
+  height 92rpx
+  margin 0
+  padding 0
+  display flex
+  justify-content center
+  align-items center
+
+  &::after
+    border 2px solid #C8D6FF
+    border-radius 46rpx
+
+  &::active
+    filter none
+
+  image
+    display block
+    width 28rpx
+    height 36rpx
+    filter drop-shadow(0 4rpx 8rpx rgba(#7599FF, .5))
+
+  .bar
+    background-color #7599FF
+    border-radius 6rpx
+    box-shadow 0 4rpx 8rpx rgba(#7599FF, .5)
+    width 10rpx
+    height 36rpx
+
+    + .bar
+      margin-left 12rpx
+
+.play-info
+  display flex
+  flex-direction column
+  justify-content space-between
+  flex 1
+  padding 20rpx
+
+  .timer
+    font-size 24rpx
+    text-align right
+
+  .progress
+    background-color white
+    border-radius 10rpx
+    height 20rpx
+
+  .progress-bar
+    background-color #7599FF
+    border-radius 10rpx
+    box-shadow 0 4rpx 8rpx rgba(#7599FF, .5)
+    height 20rpx

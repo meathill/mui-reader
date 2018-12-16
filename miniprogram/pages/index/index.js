@@ -1,8 +1,9 @@
 import AV, {Cloud} from '../../libs/av-weapp-min';
 import {alert, getClipboardData} from '../../libs/Weixin';
 import isString from '../../libs/isString';
-import {merge} from "../../helper/util";
+import {merge, toMinute} from "../../helper/util";
 import Bookmark, {BOOKMARK} from "../../model/Bookmark";
+
 const validUrl = require('../../libs/valid-url');
 
 /* global Page, getApp, wx */
@@ -14,8 +15,10 @@ Page({
     logged: true,
     isLogin: false,
     isSaving: false,
+    isPlaying: false,
 
     list: [],
+    current: -1,
     newUrl: false,
     newUrlOut: false,
   },
@@ -80,7 +83,14 @@ Page({
     query.limit(1);
     return query.find()
       .then(bookmarks => {
-        bookmarks = bookmarks.map(bookmark => ({id: bookmark.id, ...bookmark.toJSON()}));
+        bookmarks = bookmarks.map(bookmark => {
+          return {
+            id: bookmark.id,
+            ...bookmark.toJSON(),
+            audioCurrent: '00:00',
+            audioDurationText: '00:00',
+          };
+        });
         const list = merge(this.data.list, bookmarks);
         this.setData({
           list,
@@ -172,11 +182,86 @@ Page({
         this.getReady();
       };
     }
+
+    this.audioContext = wx.createInnerAudioContext();
+    this.audioContext.onPlay(this.onPlay.bind(this));
+    this.audioContext.onPause(this.onPause.bind(this));
+    this.audioContext.onTimeUpdate(this.onTimeUpdate.bind(this));
   },
   onPullDownRefresh() {
     this.refresh();
   },
   onReachBottom() {
     this.refresh(this.data.list[this.data.list.length - 1].createdAt, false);
-  }
+  },
+
+  // 播放相关
+  doActive(event) {
+    if (this.data.isPlaying) {
+      return;
+    }
+    const {currentTarget: {dataset: {index}}} = event;
+    const {list} = this.data;
+    list[index].isActive = true;
+    this.setData({
+      list,
+    });
+  },
+  doPlay(event) {
+    const {target: {dataset: {index}}} = event;
+    const {list} = this.data;
+    this.audioContext.src = list[index].link.file.url;
+    this.audioContext.play();
+    list[index].isPlaying = true;
+    this.setData({
+      current: index,
+      list,
+    });
+  },
+  doPause(event) {
+    this.audioContext.pause();
+    const {target: {dataset: {index}}} = event;
+    const {list} = this.data;
+    list[index].isPlaying = false;
+    this.setData({
+      list,
+    });
+  },
+  onPlay() {
+    this.setData({
+      isPlaying: true,
+    });
+  },
+  onPause() {
+    this.setData({
+      isPlaying: false,
+    });
+  },
+  onStop() {
+    const {list, current} = this.data;
+    list[current] = Object.assign(list[current], {
+      percent: 0,
+      audioCurrent: '00:00',
+      audioDurationText: '00:00',
+    });
+    this.setData({
+      isPlaying: false,
+      list,
+      current: -1,
+    });
+  },
+  onTimeUpdate() {
+    if (!this.data.isPlaying) {
+      return;
+    }
+    const {list, current} = this.data;
+    list[current] = Object.assign(list[current], {
+      audioCurrent: toMinute(this.audioContext.currentTime),
+      audioDurationText: toMinute(this.audioContext.duration),
+      percent: this.audioContext.currentTime / this.audioContext.duration * 100 >> 0,
+    });
+    this.setData({
+      list,
+    });
+  },
 });

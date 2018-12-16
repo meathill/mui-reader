@@ -43,10 +43,34 @@ view.welcome(wx:if="{{!list || list.length === 0}}")
     view.wizard-item.wizard-3 进入“换听”小程序
     view.wizard-item.wizard-4 换听会自动帮您发现文章
 
-view.listen-list
-  view.listen-item(wx:for="{{list}}", wx:key="{{item.id}}")
+view.listen-list(wx:else)
+  view.listen-item(
+    wx:for="{{list}}",
+    wx:key="{{item.id}}",
+    bindtap="doActive",
+    data-index="{{index}}",
+  )
     view.header
       view.badge(wx:if="{{item.link.status === 0}}") 转换中
       view.h1 {{item.link && item.link.title || item.url}}
     view.from 来源：{{item.origin || '微信公众号'}}
     view.excerpt {{item.link && item.link.excerpt || ''}}
+    view.player(wx:if="{{item.isActive}}")
+      button.pause-button(
+        wx:if="{{item.isPlaying}}",
+        data-index="{{index}}",
+        catchtap="doPause",
+      )
+         view.bar
+         view.bar
+      button.play-button(
+        wx:else,
+        data-index="{{index}}",
+        catchtap="doPlay"
+      )
+        image(src="../../images/icon-play.png")
+
+      view.play-info
+        view.timer {{item.audioCurrent}}/{{item.audioDurationText}}
+        view.progress
+          view.progress-bar(style="width:{{item.percent}}%")
