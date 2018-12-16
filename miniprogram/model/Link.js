@@ -1,6 +1,8 @@
 import AV from '../libs/av-weapp-min';
 
 export const LINK = 'Link';
+export const STATUS_NORMAL = 0;
+export const STATUS_READY = 0;
 
 class Link extends AV.Object {
   constructor(url) {

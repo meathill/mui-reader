@@ -21,20 +21,45 @@ AV.Cloud.afterSave('Link', request => {
 
 AV.Cloud.afterSave('Bookmark', request => {
   const url = request.object.get('url');
+  console.log('Added bookmark: ', url);
   const query = new AV.Query('Link')
     .equalTo('url', url);
   query.first()
-    .catch(() => {
-      const link = new Link(url);
-      link.from = request.object.get('owner');
-      return link.save()
+    .then(link => {
+      if (!link) {
+        console.log('Link not exists, should create.');
+        const link = new Link(url);
+        link.from = request.object.get('owner');
+        const acl = new AV.ACL();
+        acl.setPublicReadAccess(true);
+        link.setACL(acl);
+        return link.save();
+      }
+      return link;
     })
     .then(link => {
+      console.log('Link is ready: ', link.id);
       if (link.get('status') === Link.STATUS_READY) {
         request.object.set('status', Bookmark.STATUS_READY)
       }
       request.object.set('link', link);
-      return request.object.save();
+      request.object.save();
+      if (link.get('status') === Link.STATUS_NORMAL) {
+        return toMP3(link.get('url'))
+          .then(data => {
+            console.log('Oh yeah', data);
+            data.status = Link.STATUS_READY;
+            link.set(data);
+            request.object.set('status', Bookmark.STATUS_READY);
+            return Promise.all([
+              link.save(),
+              request.object.save(),
+            ]);
+          });
+      }
+    })
+    .then(p => {
+      console.log('OK. ', p ? 'And ready.' : '');
     });
 });
 

@@ -34,9 +34,13 @@ module.exports = function (url) {
 
       let total = 0;
       paragraph.unshift(title);
-      paragraph = paragraph.filter(item => !!item)
+      paragraph = paragraph.map(item => {
+          return item.trim()
+          .replace(/[\n\r]/g, '')
+          .replace(/^\s$/, '');
+        })
+        .filter(item => !!item)
         .map(item => {
-          item = item.trim().replace(/[\n\r]/g, '');
           total += item.length;
           if (item.length <= 100) {
             return item;
@@ -76,6 +80,10 @@ module.exports = function (url) {
             return writeFile(filename, audio, {
               encoding: 'base64',
             });
+          })
+          .catch(error => {
+            // 个别失败可以容忍
+            console.log(error);
           });
       }, Promise.resolve());
     })

@@ -2,7 +2,8 @@ import AV, {Cloud} from '../../libs/av-weapp-min';
 import {alert, getClipboardData} from '../../libs/Weixin';
 import isString from '../../libs/isString';
 import {merge, toMinute} from "../../helper/util";
-import Bookmark, {BOOKMARK} from "../../model/Bookmark";
+import Bookmark, {BOOKMARK, STATUS_PENDING} from "../../model/Bookmark";
+import {STATUS_NORMAL} from "../../model/Link";
 
 const validUrl = require('../../libs/valid-url');
 
@@ -31,7 +32,7 @@ Page({
         });
     } else {
       this.setData({
-        logged: true,
+        logged: false,
       });
     }
     wx.hideLoading();
@@ -72,7 +73,7 @@ Page({
     const query = new AV.Query(BOOKMARK)
       .descending('status')
       .descending('createdAt')
-      .include('link');
+      .include(['link']);
     if (createdAt) {
       if (greater) {
         query.greaterThan('createdAt', createdAt);
@@ -80,13 +81,14 @@ Page({
         query.lessThan('createdAt', createdAt);
       }
     }
-    query.limit(1);
+    query.limit(10);
     return query.find()
       .then(bookmarks => {
         bookmarks = bookmarks.map(bookmark => {
           return {
             id: bookmark.id,
             ...bookmark.toJSON(),
+            percent: 0,
             audioCurrent: '00:00',
             audioDurationText: '00:00',
           };
@@ -113,7 +115,10 @@ Page({
         list.unshift({
           id: saved.id,
           ...saved.toJSON(),
-          link: this.data.newArticle,
+          link: {
+            ...this.data.newArticle,
+            status: STATUS_NORMAL,
+          },
         });
         this.setData({
           list,
@@ -187,6 +192,7 @@ Page({
     this.audioContext.onPlay(this.onPlay.bind(this));
     this.audioContext.onPause(this.onPause.bind(this));
     this.audioContext.onTimeUpdate(this.onTimeUpdate.bind(this));
+    this.audioContext.onEnded(this.onEnded.bind(this));
   },
   onPullDownRefresh() {
     this.refresh();
@@ -202,6 +208,9 @@ Page({
     }
     const {currentTarget: {dataset: {index}}} = event;
     const {list} = this.data;
+    if (!list[index].link || !list[index].link.file) {
+      return;
+    }
     list[index].isActive = true;
     this.setData({
       list,
@@ -260,6 +269,16 @@ Page({
       audioDurationText: toMinute(this.audioContext.duration),
       percent: this.audioContext.currentTime / this.audioContext.duration * 100 >> 0,
     });
+    this.setData({
+      list,
+    });
+  },
+  onEnded() {
+    this.setData({
+      isPlaying: false,
+    });
+    const {list, current} = this.data;
+    list[current].isComplete = true;
     this.setData({
       list,
     });
