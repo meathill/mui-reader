@@ -9,5 +9,6 @@
     "navigationBarBackgroundColor": "#F6F6F6",
     "navigationBarTitleText": "换听",
     "navigationBarTextStyle": "black"
-  }
+  },
+  "requiredBackgroundModes": true
 }

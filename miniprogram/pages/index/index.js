@@ -91,6 +91,7 @@ Page({
             percent: 0,
             audioCurrent: '00:00',
             audioDurationText: '00:00',
+            isPlayed: false,
           };
         });
         const list = merge(this.data.list, bookmarks);
@@ -188,7 +189,7 @@ Page({
       };
     }
 
-    this.audioContext = wx.createInnerAudioContext();
+    this.audioContext = wx.getBackgroundAudioManager();
     this.audioContext.onPlay(this.onPlay.bind(this));
     this.audioContext.onPause(this.onPause.bind(this));
     this.audioContext.onTimeUpdate(this.onTimeUpdate.bind(this));
@@ -219,8 +220,12 @@ Page({
   doPlay(event) {
     const {target: {dataset: {index}}} = event;
     const {list} = this.data;
-    this.audioContext.src = list[index].link.file.url;
-    this.audioContext.play();
+    if (list[index].isPlayed) {
+      this.audioContext.play();
+    } else {
+      this.audioContext.src = list[index].link.file.url;
+      this.audioContext.title = list[index].link.title || list[index].url;
+    }
     list[index].isPlaying = true;
     this.setData({
       current: index,
@@ -252,6 +257,7 @@ Page({
       percent: 0,
       audioCurrent: '00:00',
       audioDurationText: '00:00',
+      isPlayed: false,
     });
     this.setData({
       isPlaying: false,
@@ -268,6 +274,7 @@ Page({
       audioCurrent: toMinute(this.audioContext.currentTime),
       audioDurationText: toMinute(this.audioContext.duration),
       percent: this.audioContext.currentTime / this.audioContext.duration * 100 >> 0,
+      isPlayed: true,
     });
     this.setData({
       list,
