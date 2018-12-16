@@ -44,9 +44,9 @@ view.welcome(wx:if="{{!list || list.length === 0}}")
     view.wizard-item.wizard-4 换听会自动帮您发现文章
 
 view.listen-list
-  view.listen-item(wx:for="{{list}}")
+  view.listen-item(wx:for="{{list}}", wx:key="{{item.id}}")
     view.header
-      view.badge(wx:if="{{item.status === 10}}") 转换中
-      view.h1 {{item.title || item.url}}
-    view.from 来源：{{item.origin}}
-    view.excerpt {{item.excerpt}}
+      view.badge(wx:if="{{item.link.status === 0}}") 转换中
+      view.h1 {{item.link && item.link.title || item.url}}
+    view.from 来源：{{item.origin || '微信公众号'}}
+    view.excerpt {{item.link && item.link.excerpt || ''}}

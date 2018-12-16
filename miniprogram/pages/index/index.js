@@ -37,17 +37,15 @@ Page({
   searchClipboard() {
     getClipboardData()
       .then(result => {
-        if (!isString(result)) {
-          return;
+        if (!result || !isString(result)) {
+          throw new Error('Clipboard is empty');
         }
         if (!validUrl.isWebUri(result)) {
-          console.log('Not a url');
-          return;
+          throw new Error('Not a url');
         }
 
         if (this.data.list.find(item => item.url === result)) {
-          console.log('Url exists.');
-          return;
+          throw new Error('Url exists.');
         }
 
         this.setData({
@@ -58,19 +56,20 @@ Page({
       .then(url => {
         return Cloud.run('fetch', {
           url,
-        })
+        });
       })
       .then(article => {
         this.setData({
           newArticle: article,
         });
       })
-      .catch(console.error);
+      .catch(console.log);
   },
   refresh(createdAt, greater = true) {
     const query = new AV.Query(BOOKMARK)
       .descending('status')
-      .descending('createdAt');
+      .descending('createdAt')
+      .include('link');
     if (createdAt) {
       if (greater) {
         query.greaterThan('createdAt', createdAt);
@@ -104,6 +103,7 @@ Page({
         list.unshift({
           id: saved.id,
           ...saved.toJSON(),
+          link: this.data.newArticle,
         });
         this.setData({
           list,

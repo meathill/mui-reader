@@ -3,13 +3,15 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const toMP3 = require('./convertor');
 const Link = require("./model/Link");
+const Bookmark = require('./model/Bookmark');
 
 AV.Cloud.afterSave('Link', request => {
   const url = request.object.get('url');
   return toMP3(url)
-    .then(file => {
+    .then(data => {
       console.log('Oh yeah');
-      request.object.set('file', file);
+      data.status = Link.STATUS_READY;
+      request.object.set(data);
       return request.object.save();
     })
     .then(() => {
@@ -28,6 +30,9 @@ AV.Cloud.afterSave('Bookmark', request => {
       return link.save()
     })
     .then(link => {
+      if (link.get('status') === Link.STATUS_READY) {
+        request.object.set('status', Bookmark.STATUS_READY)
+      }
       request.object.set('link', link);
       return request.object.save();
     });

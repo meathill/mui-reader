@@ -18,6 +18,8 @@ module.exports = function (url) {
   let length;
   let total = 0;
   let sessionId = generateRandomString(12);
+  let title;
+  let excerpt;
   return axios.get(url)
     .then(content => {
       return cheerio.load(content.data, {
@@ -25,7 +27,7 @@ module.exports = function (url) {
       });
     })
     .then($ => {
-      const title = $('#page-content h2').text();
+      title = $('#page-content h2').text();
       let paragraph = $('#page-content p').map(function () {
         return $(this).text();
       }).get();
@@ -59,6 +61,7 @@ module.exports = function (url) {
       return flatten(paragraph);
     })
     .then(paragraph => {
+      excerpt = paragraph.slice(0, 1).join('');
       length = paragraph.length;
       return paragraph.reduce((promise, line, index) => {
         total += line.length;
@@ -127,7 +130,11 @@ module.exports = function (url) {
     })
     .then(([file]) => {
       console.log(`转换成功。共：${total} 字，耗时：${Math.round((Date.now() - startTime) / 1000)}s`);
-      return file;
+      return {
+        file,
+        title,
+        excerpt,
+      };
     })
     .catch(console.error);
 };

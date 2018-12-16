@@ -1,9 +1,9 @@
-import AV from '../libs/av-weapp-min';
+const AV = require('leanengine');
 
-export const BOOKMARK = 'Bookmark';
-export const STATUS_PENDING = 10;
-export const STATUS_READY = 5;
-export const STATUS_HEARD = 15;
+const BOOKMARK = 'Bookmark';
+const STATUS_PENDING = 10;
+const STATUS_READY = 5;
+const STATUS_COMPLETE = 15;
 
 class Bookmark extends AV.Object {
   constructor(url) {
@@ -35,6 +35,10 @@ class Bookmark extends AV.Object {
   }
 }
 
+Bookmark.STATUS_PENDING = STATUS_PENDING;
+Bookmark.STATUS_READY = STATUS_READY;
+Bookmark.STATUS_COMPLETE = STATUS_COMPLETE;
+
 AV.Object.register(Bookmark, BOOKMARK);
 
-export default Bookmark;
+module.exports = Bookmark;

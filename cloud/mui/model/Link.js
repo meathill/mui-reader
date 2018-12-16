@@ -24,6 +24,9 @@ class Link extends AV.Object {
   }
 }
 
+Link.STATUS_NORMAL = 0;
+Link.STATUS_READY = 1;
+
 AV.Object.register(Link, LINK);
 
 module.exports = Link;
