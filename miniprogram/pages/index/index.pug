@@ -21,10 +21,10 @@ view.new-url.animated.fast(
       bindtap="doCancel",
     ) 放弃
 
-view.welcome(wx:if="{{!list || list.length === 0}}")
+view.welcome(class!="{{!list || list.length === 0 ? '' : 'bg'}}")
   image(src="../../images/mic.png")
   text.h1 换听
-  text.lead 帮你阅读文章的好帮手
+  text.lead 帮你学习文章的好帮手
 
   block(
     wx:if="{{!logged}}",
@@ -37,13 +37,13 @@ view.welcome(wx:if="{{!list || list.length === 0}}")
     ) 登录
     text.hint 需要先授权登录才可以顺利使用哦~
 
-  block(wx:else)
+  block(wx:elif="{{!list || list.length === 0}}")
     view.wizard-item.wizard-1 打开任意文章点击右上“…”
     view.wizard-item.wizard-2 点击“复制连接”
     view.wizard-item.wizard-3 进入“换听”小程序
     view.wizard-item.wizard-4 换听会自动帮您发现文章
 
-view.listen-list(wx:else)
+view.listen-list(wx:if!="{{list && list.length > 0}}")
   view.listen-item(
     wx:for="{{list}}",
     wx:key="{{item.id}}",
