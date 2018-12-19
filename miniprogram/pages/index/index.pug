@@ -52,7 +52,7 @@ view.listen-list(wx:if!="{{list && list.length > 0}}")
     class="{{item.isActive ? 'active' : ''}}",
   )
     view.header
-      view.badge(wx:if="{{item.link.status === 0}}") 转换中
+      view.badge(wx:if="{{item.link.status === STATUS_READY}}") 转换中
       view.h1 {{item.link && item.link.title || item.url}}
     view.from 来源：{{item.source}}
     view.excerpt {{item.link && item.link.excerpt || ''}}
