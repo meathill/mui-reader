@@ -11,4 +11,4 @@ start.sh
 # DEV
 *.mp3
 *.wav
-file.txt
+*.txt

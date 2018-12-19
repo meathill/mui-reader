@@ -7,142 +7,123 @@ const cheerio = require('cheerio');
 const del = require('del');
 const {flatten} = require('lodash');
 const convert = require('./convert');
-const {generateRandomString} = require("../helper/util");
 const spawn = require('../helper/spawn');
 
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
+const appendFile = promisify(fs.appendFile);
+const {existsSync} = fs;
 
-module.exports = function (url) {
-  const startTime = Date.now();
-  let length;
-  let total = 0;
-  let sessionId = generateRandomString(12);
-  let title;
-  let excerpt;
-  return axios.get(url)
-    .then(content => {
-      return cheerio.load(content.data, {
-        decodeEntities: false,
-      });
-    })
-    .then($ => {
-      title = $('#page-content h2').text();
-      let paragraph = $('#page-content p').map(function () {
-        return $(this).text();
-      }).get();
+function clean(str) {
+  return str.trim()
+    .replace(/[\n\r]/g, '')
+    .replace(/^\s$/, '');
+}
+function extractExcerpt(array) {
+  let count = 0;
+  let excerpt = '';
+  let index = 0;
+  while (count < 2) {
+    if (array[index]) {
+      excerpt += array[index];
+      count ++;
+    }
+    index ++;
+  }
+  return excerpt;
+}
 
-      let total = 0;
-      paragraph.unshift(title);
-      paragraph = paragraph.map(item => {
-          return item.trim()
-          .replace(/[\n\r]/g, '')
-          .replace(/^\s$/, '');
-        })
-        .filter(item => !!item)
-        .map(item => {
-          total += item.length;
-          if (item.length <= 100) {
-            return item;
-          }
-
-          const reg = /[，。]/g;
-          const split = [];
-          let result;
-          let start = 0;
-          let last = 0;
-          while ((result = reg.exec(item)) !== null) {
-            const {index} = result;
-            if (index + 1 - start > 100) {
-              split.push(item.substring(start, last + 1));
-              start = last + 1;
-            }
-            last = index;
-          }
-          split.push(item.substring(start));
-          return split;
-        });
-      return flatten(paragraph);
-    })
-    .then(paragraph => {
-      excerpt = paragraph.slice(0, 1).join('');
-      length = paragraph.length;
-      return paragraph.reduce((promise, line, index) => {
-        total += line.length;
-        return promise
-          .then(() => {
-            console.log('TTS: ', line);
-            return convert(sessionId, line);
-          })
-          .then(audio => {
-            const filename = `${sessionId}-${index}.wav`;
-            console.log('TTS ok. Write into: ', filename);
-            return writeFile(filename, audio, {
-              encoding: 'base64',
-            });
-          })
-          .catch(error => {
-            // 个别失败可以容忍
-            console.log(error);
-          });
-      }, Promise.resolve());
-    })
-    .then(() => {
-      let fileList = [];
-      for (let i = 0; i < length; i++) {
-        const file = path.resolve(process.cwd(), `${sessionId}-${i}.wav`);
-        fileList.push(`file ${file}`);
-      }
-      console.log('Output file list.');
-      return writeFile(`${sessionId}.txt`, fileList.join('\n'), 'utf8');
-    })
-    // 把所有 wav 合并成一个
-    .then(() => {
+module.exports = {
+  async toMP3(sessionId, line, index) {
+    console.log('TTS: ', line);
+    const audio = await convert(sessionId, line);
+    const filename = `${sessionId}-${index}.wav`;
+    console.log('TTS ok. Write into: ', filename);
+    await writeFile(filename, audio, {
+      encoding: 'base64',
+    });
+    const file = path.resolve(process.cwd(), filename);
+    await appendFile(`${sessionId}.txt`, `file ${file}\n`, 'utf8');
+  },
+  // 合并成一个 MP3 并上传
+  async mergeMP3(sessionId) {
+    const mp3 = `${sessionId}.mp3`;
+    if (!existsSync(path.resolve(process.cwd(), mp3))) {
+      console.log('Start to create file.');
       const cmd = 'ffmpeg';
-      const args = [
+      let args = [
         '-f', 'concat',
         '-safe', '0',
         '-i', `${sessionId}.txt`,
         '-c', 'copy',
+        '-y',
         `${sessionId}.wav`,
       ];
-      return spawn(cmd, args);
-    })
-    // 把 out.wav 转换成 out.mp3，并存入存储
-    .then(() => {
-      const cmd = 'ffmpeg';
-      const args = [
+      await spawn(cmd, args);
+      console.log('wav merged.');
+
+      // 转换 mp3
+      args = [
         '-i', `${sessionId}.wav`,
         `${sessionId}.mp3`,
       ];
-      return spawn(cmd, args);
-    })
-    // 上传 mp3 到存储
-    .then(() => {
-      return readFile(`${sessionId}.mp3`, {
-        encoding: 'base64',
+      await spawn(cmd, args);
+    }
+    console.log('mp3 created.');
+
+    // 上传
+    const base64 = await readFile(`${sessionId}.mp3`, {
+      encoding: 'base64',
+    });
+    const file = new AV.File(`${sessionId}.mp3`, {
+      base64,
+    });
+    await file.save();
+    await del([`${sessionId}.mp3`, `${sessionId}*.wav`, `${sessionId}.txt`]);
+    console.log('Converted: ', file.id);
+    return file;
+  },
+  async capture(url) {
+    const content = await axios.get(url);
+    const $ = cheerio.load(content.data, {
+      decodeEntities: false,
+    });
+    const title = clean($('#page-content h2').text());
+    let paragraph = $('#page-content p').map(function () {
+      return $(this).text();
+    }).get();
+    let total = 0;
+    paragraph = paragraph.map(clean)
+      .filter(item => !!item)
+      .map(item => {
+        total += item.length;
+        if (item.length <= 100) {
+          return item;
+        }
+
+        const reg = /[，。]/g;
+        const split = [];
+        let result;
+        let start = 0;
+        let last = 0;
+        while ((result = reg.exec(item)) !== null) {
+          const {index} = result;
+          if (index + 1 - start > 100) {
+            split.push(item.substring(start, last + 1));
+            start = last + 1;
+          }
+          last = index;
+        }
+        split.push(item.substring(start));
+        return split;
       });
-    })
-    .then(base64 => {
-      const file = new AV.File(`${sessionId}.mp3`, {
-        base64,
-      });
-      return file.save();
-    })
-    // 删掉中间文件
-    .then(file => {
-      return Promise.all([
-        file,
-        del([`${sessionId}.mp3`, `${sessionId}*.wav`, `${sessionId}.txt`]),
-      ]);
-    })
-    .then(([file]) => {
-      console.log(`转换成功。共：${total} 字，耗时：${Math.round((Date.now() - startTime) / 1000)}s`);
-      return {
-        file,
-        title,
-        excerpt,
-      };
-    })
-    .catch(console.error);
+    paragraph = flatten(paragraph);
+    const excerpt = extractExcerpt(paragraph);
+    paragraph.unshift(title);
+    return {
+      title,
+      excerpt,
+      paragraph,
+    };
+  },
 };

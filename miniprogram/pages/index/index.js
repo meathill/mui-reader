@@ -2,8 +2,8 @@ import AV, {Cloud} from '../../libs/av-weapp-min';
 import {alert, getClipboardData} from '../../libs/Weixin';
 import isString from '../../libs/isString';
 import {merge, toMinute} from "../../helper/util";
-import Bookmark, {BOOKMARK, STATUS_PENDING} from "../../model/Bookmark";
-import {STATUS_NORMAL} from "../../model/Link";
+import Bookmark, {BOOKMARK} from "../../model/Bookmark";
+import {STATUS_NORMAL, STATUS_READY} from "../../model/Link";
 import getSource from "../../filter/source";
 
 const validUrl = require('../../libs/valid-url');
@@ -14,6 +14,8 @@ const app = getApp();
 
 Page({
   data: {
+    STATUS_READY,
+
     logged: true,
     isLogin: false,
     isSaving: false,
@@ -219,8 +221,9 @@ Page({
     const current = this.data.list.find(item => item.isActive);
     if (current) {
       current.isActive = false;
+    } else if (current !== list[index]) {
+      list[index].isActive = true;
     }
-    list[index].isActive = true;
     this.setData({
       list,
     });
