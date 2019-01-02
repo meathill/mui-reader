@@ -11,7 +11,6 @@ AV.Cloud.afterSave('Bookmark', async request => {
     .equalTo('url', url);
   let link = await query.first();
 
-  console.log(link);
   if (!link) {
     console.log('Link not exists, should create.');
     link = new Link(url);
@@ -27,6 +26,7 @@ AV.Cloud.afterSave('Bookmark', async request => {
   await request.object.save();
 
   if (link.get('status') === Link.STATUS_NORMAL) {
+    console.log('New link, should be captured.');
     const data = await capture(url);
     data.status = Link.STATUS_READY;
     link.set(data);

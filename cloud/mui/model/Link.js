@@ -7,6 +7,7 @@ class Link extends AV.Object {
     super();
 
     this.url = url;
+    this.status = Link.STATUS_NORMAL;
   }
 
   get url() {
@@ -21,6 +22,13 @@ class Link extends AV.Object {
   }
   set from(value) {
     this.set('from', value);
+  }
+
+  get status() {
+    return this.get('status');
+  }
+  set status(value) {
+    this.set('status', value);
   }
 }
 
