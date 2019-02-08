@@ -22,7 +22,7 @@
     "leancloud-storage": "^3.11.1",
     "leanengine": "^3.3.2",
     "lodash": "^4.17.11",
-    "tencentcloud-sdk-nodejs": "^3.0.42"
+    "tencentcloud-sdk-nodejs": "^3.0.45"
   },
   "devDependencies": {
     "nodemon": "^1.18.6"
