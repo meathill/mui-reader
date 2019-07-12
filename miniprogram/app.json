@@ -10,5 +10,8 @@
     "navigationBarTitleText": "换听",
     "navigationBarTextStyle": "black"
   },
-  "requiredBackgroundModes": ["audio"]
+  "requiredBackgroundModes": [
+    "audio"
+  ],
+  "sitemapLocation": "sitemap.json"
 }

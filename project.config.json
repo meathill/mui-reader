@@ -12,6 +12,8 @@
 	"projectname": "mui-reader-wxapp",
 	"libVersion": "2.2.5",
 	"debug": true,
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
