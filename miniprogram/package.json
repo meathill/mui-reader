@@ -15,9 +15,9 @@
   "author": "Meathill <meathill@gmail.com> (http://meathill.com/)",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/register": "^7.5.5",
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/register": "^7.6.2",
     "gulp": "^4.0.2",
     "gulp-pug": "^4.0.1",
     "gulp-rename": "^1.4.0",
@@ -28,7 +28,7 @@
     "lodash-es": "^4.17.15",
     "lodash.isstring": "^4.0.1",
     "lodash.keyby": "^4.6.0",
-    "spinkit": "^1.2.5",
+    "spinkit": "^2.0.1",
     "valid-url": "^1.0.9"
   }
 }
