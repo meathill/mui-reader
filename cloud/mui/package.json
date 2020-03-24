@@ -11,21 +11,21 @@
     "deploy": "lean deploy"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "cheerio": "^1.0.0-rc.3",
     "connect-timeout": "^1.7.0",
-    "cookie-parser": "^1.4.4",
+    "cookie-parser": "^1.4.5",
     "del": "^5.1.0",
-    "ejs": "^2.7.1",
+    "ejs": "^3.0.1",
     "express": "^4.17.1",
-    "leancloud-storage": "^3.15.0",
-    "leanengine": "^3.4.0",
+    "leancloud-storage": "^4.5.0",
+    "leanengine": "^3.6.0",
     "lodash": "^4.17.15",
-    "tencentcloud-sdk-nodejs": "^3.0.93"
+    "tencentcloud-sdk-nodejs": "^3.0.138"
   },
   "devDependencies": {
-    "nodemon": "^1.19.4"
+    "nodemon": "^2.0.2"
   },
   "engines": {
     "node": "10.x"
