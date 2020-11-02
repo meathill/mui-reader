@@ -13,7 +13,7 @@ async function doPUG(path) {
     .pipe(rename({
       extname: '.wxml',
     }))
-    .pipe(gulp.dest('pages'));
+    .pipe(gulp.dest('./pages'));
 }
 
 async function doStylus(path) {
@@ -24,7 +24,7 @@ async function doStylus(path) {
     .pipe(rename({
       extname: '.wxss',
     }))
-    .pipe(gulp.dest('pages'));
+    .pipe(gulp.dest('./pages'));
 }
 
 gulp.task('pug', async() => {

@@ -1,8 +1,9 @@
 import {confirm, getAuthSetting, getUserInfo, setApp} from './libs/Weixin';
 import {LEAN_APP_ID, LEAN_APP_SECRET} from './config/av';
-import AV from './libs/av-weapp-min';
+import AV from './libs/av-core-min';
+const Adapter = require('./libs/leancloud-adapters-weapp');
 
-/* global App, wx */
+AV.setAdapters(Adapter);
 
 App({
   onLaunch: function(options) {
@@ -27,6 +28,7 @@ App({
     AV.init({
       appId: LEAN_APP_ID,
       appKey: LEAN_APP_SECRET,
+      serverURLs: 'https://api.mui.meathill.com',
     });
     this.globalData.user = AV.User.current();
 

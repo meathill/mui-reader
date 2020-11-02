@@ -1,4 +1,4 @@
-import AV from '../libs/av-weapp-min';
+import AV from '../libs/av-core-min';
 
 export const LINK = 'Link';
 export const STATUS_NORMAL = 0;

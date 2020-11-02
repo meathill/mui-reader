@@ -46,7 +46,7 @@ view.welcome(class!="{{!list || list.length === 0 ? '' : 'bg'}}")
 view.listen-list(wx:if!="{{list && list.length > 0}}")
   view.listen-item(
     wx:for="{{list}}",
-    wx:key="{{item.id}}",
+    wx:key="id",
     bindtap="doActive",
     data-index="{{index}}",
     class="{{item.isActive ? 'active' : ''}}",

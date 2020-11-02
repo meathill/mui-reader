@@ -1,6 +1,4 @@
-import AV from './av-weapp-min';
-
-/* global getApp, wx */
+import AV from './av-core-min';
 
 let app;
 

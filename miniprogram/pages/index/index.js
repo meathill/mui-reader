@@ -1,14 +1,12 @@
-import AV, {Cloud} from '../../libs/av-weapp-min';
+import AV, {Cloud} from '../../libs/av-core-min';
 import {alert, getClipboardData} from '../../libs/Weixin';
 import isString from '../../libs/isString';
-import {merge, toMinute} from "../../helper/util";
-import Bookmark, {BOOKMARK} from "../../model/Bookmark";
-import {STATUS_NORMAL, STATUS_READY} from "../../model/Link";
-import getSource from "../../filter/source";
+import {merge, toMinute} from '../../helper/util';
+import Bookmark, {BOOKMARK} from '../../model/Bookmark';
+import {STATUS_NORMAL, STATUS_READY} from '../../model/Link';
+import getSource from '../../filter/source';
 
 const validUrl = require('../../libs/valid-url');
-
-/* global Page, getApp, wx */
 
 const app = getApp();
 

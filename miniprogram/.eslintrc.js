@@ -1,15 +1,10 @@
-// Copyright (C) 2017 by OpenResty Inc. All rights reserved.
-
 module.exports = {
   env: {
     es6: true,
     browser: true,
-    commonjs: true
+    commonjs: true,
   },
-  parserOptions: {
-    parser: 'babel-eslint',
-    sourceType: 'module',
-  },
+  parser: 'babel-eslint',
   plugins: [
     'babel',
   ],
@@ -17,7 +12,12 @@ module.exports = {
     'eslint:recommended',
   ],
   globals: {
-    PRODUCTION: false,
+    App: true,
+    Page: true,
+    Component: true,
+    wx: true,
+    getApp: true,
+    getCurrentPages: true,
     process: false,
     describe: false,
     it: false,
@@ -32,6 +32,7 @@ module.exports = {
     quotes: [1, 'single'],
     'semi-spacing': [2],
     semi: [2, 'always'],
+    'babel/semi': [2],
     'brace-style': [2, '1tbs'],
     camelcase: [2],
     'array-bracket-spacing': [2],

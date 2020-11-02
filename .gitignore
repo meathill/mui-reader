@@ -3,6 +3,8 @@
 
 # repo
 node_modules
+miniprogram/libs/av-core-min.js
+miniprogram/libs/leancloud-adapters-weapp.js
 
 # DEV
 cloudfunctions/convertor/config.js

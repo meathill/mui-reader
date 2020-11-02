@@ -1,4 +1,4 @@
-import AV from '../libs/av-weapp-min';
+import AV from '../libs/av-core-min';
 
 export function login(userInfo, app) {
   return AV.User.loginWithWeapp()
