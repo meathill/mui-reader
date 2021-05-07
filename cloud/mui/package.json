@@ -21,7 +21,7 @@
     "express": "^4.17.1",
     "leancloud-storage": "^4.10.0",
     "leanengine": "^3.7.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "tencentcloud-sdk-nodejs": "^3.0.268"
   },
   "devDependencies": {
