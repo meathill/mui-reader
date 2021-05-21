@@ -15,20 +15,16 @@
   "author": "Meathill <meathill@gmail.com> (http://meathill.com/)",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.11.6",
-    "@babel/preset-env": "^7.11.5",
-    "@babel/register": "^7.11.5",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
+    "@babel/register": "^7.13.16",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.12.1",
-    "eslint-plugin-babel": "^5.3.1",
-    "gulp": "^4.0.2",
-    "gulp-pug": "^4.0.1",
-    "gulp-rename": "^2.0.0",
-    "gulp-stylus": "^2.7.0"
+    "eslint": "^7.26.0",
+    "eslint-plugin-babel": "^5.3.1"
   },
   "dependencies": {
     "animate.css": "^4.1.1",
-    "lodash-es": "^4.17.15",
+    "lodash-es": "^4.17.21",
     "spinkit": "^2.0.1",
     "valid-url": "^1.0.9"
   }
