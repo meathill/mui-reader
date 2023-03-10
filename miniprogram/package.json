@@ -15,17 +15,11 @@
   "author": "Meathill <meathill@gmail.com> (http://meathill.com/)",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.20.12",
-    "@babel/eslint-parser": "^7.19.1",
-    "@babel/preset-env": "^7.20.2",
-    "@babel/register": "^7.18.9",
-    "eslint": "^8.31.0",
-    "eslint-plugin-babel": "^5.3.1"
+    "eslint": "^8.35.0"
   },
   "dependencies": {
     "animate.css": "^4.1.1",
     "lodash-es": "^4.17.21",
-    "spinkit": "^2.0.1",
-    "valid-url": "^1.0.9"
+    "spinkit": "^2.0.1"
   }
 }
